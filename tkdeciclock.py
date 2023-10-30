@@ -1,16 +1,22 @@
+#!/usr/bin/env python3
+
+import time
 import decitime as dcc
 import datetime as dtt
-import time
 import tkinter as tkr
+import tkinter.font as tkf
 
 def getDecimalTime() -> dcc.DecimalTime:
     now = dtt.datetime.now()
     return dcc.from_conventional(now.time())
 
 class ClockFace(tkr.Canvas):
-  def __init__(self, showSeconds, showSymbols, radius, padding
+  def __init__(self, fontFamily, enableEmoji, showSeconds, showSymbols, radius, padding
                , tickColor, hourColor, timeColor, noonColor, midnightColor):
     super().__init__(height=padding*2+radius*2, width=padding*2+radius*2)
+    self.symbolFont=tkf.Font(family=fontFamily, size=48)
+    self.timeFont=tkf.Font(family=fontFamily, size=36, weight="bold")
+    self.enableEmoji=enableEmoji
     self.showSeconds=showSeconds
     self.showSymbols=showSymbols
     self.radius=radius
@@ -28,10 +34,12 @@ class ClockFace(tkr.Canvas):
 
   def drawScale(self):
     super().create_oval(self.padding, self.padding, self.radius*2+self.padding, self.radius*2+self.padding, width=1, outline=self.tickColor)
-    super().create_text(self.padding+self.radius, self.padding/2, justify=tkr.CENTER, anchor=tkr.CENTER, text='🌞'
-                        , fill=self.noonColor, font='TkHeadingFont 48')
-    super().create_text(self.padding+self.radius, self.padding*1.5+self.radius*2, justify=tkr.CENTER, anchor=tkr.CENTER, text='🌛'
-                        , fill=self.midnightColor, font='TkHeadingFont 48')
+    super().create_text(self.padding+self.radius, self.padding/2, justify=tkr.CENTER, anchor=tkr.CENTER
+                        , text=chr(127774) if self.enableEmoji else 'Noon'
+                        , fill=self.noonColor, font=self.symbolFont)
+    super().create_text(self.padding+self.radius, self.padding*1.5+self.radius*2, justify=tkr.CENTER, anchor=tkr.CENTER
+                        , text=chr(127771) if self.enableEmoji else 'Midnight'
+                        , fill=self.midnightColor, font=self.symbolFont)
 
   def showTime(self):
     dtime=getDecimalTime()
@@ -46,13 +54,14 @@ class ClockFace(tkr.Canvas):
                              , int(dtime.dsecond), 's' if self.showSymbols else '')
     super().create_text(self.padding+self.radius, self.padding+self.radius, justify=tkr.CENTER
                         , text=text, fill=self.timeColor
-                        , font='TkCaptionFont 36 bold')
+                        , font=self.timeFont)
 
 root = tkr.Tk()
 root.geometry('600x600')
 root.title('Decimal Clock')
 
-clockFace = ClockFace(showSeconds=True, showSymbols=True, radius=150, padding=100
+clockFace = ClockFace(fontFamily="tkHeadingFont", enableEmoji=True, showSeconds=True, showSymbols=True
+                      , radius=150, padding=100
                       , tickColor='dimgray', hourColor='springgreen', timeColor='darkslategray'
                       , noonColor='gold', midnightColor='midnightblue')
 clockFace.pack(anchor=tkr.CENTER, expand=True)
