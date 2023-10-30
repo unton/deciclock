@@ -5,9 +5,18 @@ decimal time (10 hours per day, 100 minutes per hour, 100 seconds per minute)
 '''
 class DecimalTime:
     '''Decimal time (10 hours per day, 100 minutes per hour, 100 seconds per minute)'''
-    _secondsPerDay=24*60*60
-    _dsecondsPerDay=10*100*100
-    _secondsRatio=_secondsPerDay/_dsecondsPerDay
+    @staticmethod
+    def get_seconds_per_day():
+        '''Seconds per day (conventional)'''
+        return 24*60*60
+    @staticmethod
+    def get_dseconds_per_day():
+        '''Seconds per day (decimal)'''
+        return 10*100*100
+    @staticmethod
+    def get_conventional_to_decimal_ratio():
+        '''Conventional to decimal time ratio'''
+        return DecimalTime.get_seconds_per_day()/DecimalTime.get_dseconds_per_day()
 
     def __init__(self, dhour, dminute, dsecond):
         self.dhour = dhour
@@ -18,7 +27,7 @@ class DecimalTime:
     def from_conventional(cls, time):
         '''Conversion from conventional to decimal time'''
         seconds = time.hour*60*60+time.minute*60+time.second+time.microsecond/1e6
-        dseconds = seconds/DecimalTime._secondsRatio
+        dseconds = seconds/DecimalTime.get_conventional_to_decimal_ratio()
         dfractional = dseconds-int(dseconds)
         dseconds = int(dseconds)
 
@@ -30,4 +39,5 @@ class DecimalTime:
 
     def ratio(self) -> float:
         '''Return ratio of passed time during a day'''
-        return (self.dhour*100*100+self.dminute*100+self.dsecond)/DecimalTime._dsecondsPerDay
+        dseconds=self.dhour*100*100+self.dminute*100+self.dsecond
+        return dseconds/DecimalTime.get_dseconds_per_day()

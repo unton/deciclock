@@ -101,7 +101,7 @@ time.sleep(untilNextDsecond)
 def update():
     '''Update clock face each decimal second'''
     clockFace.update()
-    root.after(int(dcc.DecimalTime._secondsRatio*1000), update)
+    root.after(int(dcc.DecimalTime.get_conventional_to_decimal_ratio()*1000), update)
 
 update()
 
