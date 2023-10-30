@@ -73,7 +73,7 @@ class ClockFace(tkr.Canvas):
         if self.show_seconds:
             text_format="{:02d}{}{:02d}{}{:02d}{}"
         else:
-            text_format="{:02d}{}{:02d}{}{:02d}{}"
+            text_format="{:02d}{}{:02d}{}"
         text = text_format.format(
             decitime.dhour, 'h' if self.show_symbols else ''
             , decitime.dminute, 'm' if self.show_symbols else ''
