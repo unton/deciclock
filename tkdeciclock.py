@@ -12,7 +12,7 @@ import decitime as dcc
 def get_decimal_time() -> dcc.DecimalTime:
     '''Get local time as decimal'''
     now = dtt.datetime.now()
-    return dcc.from_conventional(now.time())
+    return dcc.DecimalTime.from_conventional(now.time())
 
 class ClockFace(tkr.Canvas):
     '''Displays clock face and current time as an arc and in numerical form'''
@@ -71,10 +71,10 @@ class ClockFace(tkr.Canvas):
             , style=tkr.PIESLICE, start=270-angle, extent=3, outline=''
             , fill=self.hour_color)
         if self.show_seconds:
-            textFormat="{:02d}{}{:02d}{}{:02d}{}"
+            text_format="{:02d}{}{:02d}{}{:02d}{}"
         else:
-            textFormat="{:02d}{}{:02d}{}{:02d}{}"
-        text = textFormat.format(
+            text_format="{:02d}{}{:02d}{}{:02d}{}"
+        text = text_format.format(
             decitime.dhour, 'h' if self.show_symbols else ''
             , decitime.dminute, 'm' if self.show_symbols else ''
             , int(decitime.dsecond), 's' if self.show_symbols else '')
@@ -99,6 +99,7 @@ untilNextDsecond=1-(dtime.dsecond-int(dtime.dsecond))
 time.sleep(untilNextDsecond)
 
 def update():
+    '''Update clock face each decimal second'''
     clockFace.update()
     root.after(int(dcc.DecimalTime._secondsRatio*1000), update)
 

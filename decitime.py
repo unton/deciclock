@@ -14,19 +14,20 @@ class DecimalTime:
         self.dminute = dminute
         self.dsecond = dsecond
 
+    @classmethod
+    def from_conventional(cls, time):
+        '''Conversion from conventional to decimal time'''
+        seconds = time.hour*60*60+time.minute*60+time.second+time.microsecond/1e6
+        dseconds = seconds/DecimalTime._secondsRatio
+        dfractional = dseconds-int(dseconds)
+        dseconds = int(dseconds)
+
+        dseconds, dsecond = divmod(dseconds, 100)
+        dseconds, dminute = divmod(dseconds, 100)
+        dseconds, dhour = divmod(dseconds, 10)
+
+        return DecimalTime(dhour, dminute, dsecond+dfractional)
+
     def ratio(self) -> float:
         '''Return ratio of passed time during a day'''
         return (self.dhour*100*100+self.dminute*100+self.dsecond)/DecimalTime._dsecondsPerDay
-
-def from_conventional(time) -> DecimalTime:
-    '''Conversion from conventional to decimal time'''
-    seconds = time.hour*60*60+time.minute*60+time.second+time.microsecond/1e6
-    dseconds = seconds/DecimalTime._secondsRatio
-    dfractional = dseconds-int(dseconds)
-    dseconds = int(dseconds)
-
-    dseconds, dsecond = divmod(dseconds, 100)
-    dseconds, dminute = divmod(dseconds, 100)
-    dseconds, dhour = divmod(dseconds, 10)
-
-    return DecimalTime(dhour, dminute, dsecond+dfractional)
