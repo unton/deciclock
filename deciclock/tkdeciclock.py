@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 '''
 Tkinter GUI implementation of decimal clock
 See https://en.wikipedia.org/wiki/Decimal_time
@@ -8,7 +7,7 @@ import tkinter as tkr
 import tkinter.font as tkf
 from collections import namedtuple
 import datetime as dtt
-import decitime as dcc
+import deciclock.decitime as dcc
 
 def get_decimal_time() -> dcc.DecimalTime:
     '''Get local time as decimal'''
@@ -82,26 +81,27 @@ class ClockFace:
             , justify=tkr.CENTER, text=text, fill=self.colors.time
             , font=self.time_font)
 
-root = tkr.Tk()
-root.geometry('600x600')
-root.title('Decimal Clock')
+def run():
+    root = tkr.Tk()
+    root.geometry('600x600')
+    root.title('Decimal Clock')
 
-clockFace = ClockFace(
-    font_family="tkHeadingFont"
-    , options=ClockFace.Options(enable_emoji=True, show_seconds=True, show_symbols=True)
-    , size=ClockFace.Size(radius=150, padding=100)
-    , colors=ClockFace.Colors(tick='dimgray', hour='springgreen', time='darkslategray'
-    , noon='gold', midnight='midnightblue'))
+    clockFace = ClockFace(
+        font_family="tkHeadingFont"
+        , options=ClockFace.Options(enable_emoji=True, show_seconds=True, show_symbols=True)
+        , size=ClockFace.Size(radius=150, padding=100)
+        , colors=ClockFace.Colors(tick='dimgray', hour='springgreen', time='darkslategray'
+        , noon='gold', midnight='midnightblue'))
 
-dtime=get_decimal_time()
-untilNextDsecond=1-(dtime.dsecond-int(dtime.dsecond))
-time.sleep(untilNextDsecond)
+    dtime=get_decimal_time()
+    untilNextDsecond=1-(dtime.dsecond-int(dtime.dsecond))
+    time.sleep(untilNextDsecond)
 
-def update():
-    '''Update clock face each decimal second'''
-    clockFace.update()
-    root.after(int(dcc.DecimalTime.get_conventional_to_decimal_ratio()*1000), update)
+    def update():
+        '''Update clock face each decimal second'''
+        clockFace.update()
+        root.after(int(dcc.DecimalTime.get_conventional_to_decimal_ratio()*1000), update)
 
-update()
+    update()
 
-root.mainloop()
+    root.mainloop()
