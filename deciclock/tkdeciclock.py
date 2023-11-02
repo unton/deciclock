@@ -82,11 +82,12 @@ class ClockFace:
             , font=self.time_font)
 
 def run():
+    '''Main'''
     root = tkr.Tk()
     root.geometry('600x600')
     root.title('Decimal Clock')
 
-    clockFace = ClockFace(
+    clock_face = ClockFace(
         font_family="tkHeadingFont"
         , options=ClockFace.Options(enable_emoji=True, show_seconds=True, show_symbols=True)
         , size=ClockFace.Size(radius=150, padding=100)
@@ -94,12 +95,12 @@ def run():
         , noon='gold', midnight='midnightblue'))
 
     dtime=get_decimal_time()
-    untilNextDsecond=1-(dtime.dsecond-int(dtime.dsecond))
-    time.sleep(untilNextDsecond)
+    until_next_dsecond=1-(dtime.dsecond-int(dtime.dsecond))
+    time.sleep(until_next_dsecond)
 
     def update():
         '''Update clock face each decimal second'''
-        clockFace.update()
+        clock_face.update()
         root.after(int(dcc.DecimalTime.get_conventional_to_decimal_ratio()*1000), update)
 
     update()
