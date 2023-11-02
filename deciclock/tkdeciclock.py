@@ -58,6 +58,7 @@ class ClockFace:
         '''Show current time'''
         decitime=get_decimal_time()
         angle=decitime.ratio()*360
+
         self.canvas.create_arc(
             self.size.padding, self.size.padding
             , self.size.radius*2+self.size.padding, self.size.radius*2+self.size.padding
@@ -68,14 +69,11 @@ class ClockFace:
             , self.size.radius*2+self.size.padding, self.size.radius*2+self.size.padding
             , style=tkr.PIESLICE, start=270-angle, extent=3, outline=''
             , fill=self.colors.hour)
+      
+        text = f"{decitime.dhour:02d}"+"h" if self.options.show_symbols else ""
+        text += f"{decitime.dminute:02d}"+"m" if self.options.show_symbols else ""
         if self.options.show_seconds:
-            text_format="{:02d}{}{:02d}{}{:02d}{}"
-        else:
-            text_format="{:02d}{}{:02d}{}"
-        text = text_format.format(
-            decitime.dhour, 'h' if self.options.show_symbols else ''
-            , decitime.dminute, 'm' if self.options.show_symbols else ''
-            , int(decitime.dsecond), 's' if self.options.show_symbols else '')
+            text += f"{int(decitime.dsecond):02d}"+"s" if self.options.show_symbols else ""
         self.canvas.create_text(
             self.size.padding+self.size.radius, self.size.padding+self.size.radius
             , justify=tkr.CENTER, text=text, fill=self.colors.time
